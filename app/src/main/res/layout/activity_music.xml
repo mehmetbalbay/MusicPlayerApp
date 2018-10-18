@@ -33,7 +33,7 @@
         app:srcCompat="@color/color_gray" />
 
     <ImageView
-        android:id="@+id/back_Image"
+        android:id="@+id/back_btn_Image"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginStart="16dp"
@@ -58,8 +58,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:paddingStart="0dp"
-        android:paddingEnd="0dp"
+        android:paddingStart="1dp"
+        android:paddingEnd="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -70,12 +70,10 @@
         android:layout_width="225dp"
         android:layout_height="225dp"
         android:layout_marginTop="75dp"
-        android:background="@drawable/img"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/player_title"
-        app:srcCompat="@drawable/full" />
+        app:layout_constraintTop_toBottomOf="@+id/player_title" />
 
     <TextView
         android:id="@+id/player_title"
@@ -87,10 +85,10 @@
         android:textColor="#000000"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/back_Image"
+        app:layout_constraintBottom_toBottomOf="@+id/back_btn_Image"
         app:layout_constraintEnd_toStartOf="@+id/imageView2"
-        app:layout_constraintStart_toEndOf="@+id/back_Image"
-        app:layout_constraintTop_toTopOf="@+id/back_Image" />
+        app:layout_constraintStart_toEndOf="@+id/back_btn_Image"
+        app:layout_constraintTop_toTopOf="@+id/back_btn_Image" />
 
     <TextView
         android:id="@+id/player_album_name"

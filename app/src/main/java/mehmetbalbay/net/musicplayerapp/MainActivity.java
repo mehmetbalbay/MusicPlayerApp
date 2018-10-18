@@ -66,32 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
                         startActivity(intent);
 
-                        /*
-                        try {
-                            if (b.getText().toString().equals("Stop")) {
-                                b.setText("Play");
-                                mediaPlayer.stop();
-                                mediaPlayer.reset();
-                                mediaPlayer.release();
-                                mediaPlayer = null;
-                            }else {
-                                mediaPlayer = new MediaPlayer();
-                                mediaPlayer.setDataSource(obj.getSongUrl());
-                                mediaPlayer.prepareAsync();
-                                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                                    @Override
-                                    public void onPrepared(MediaPlayer mp) {
-                                        mp.start();
-                                        seekBar.setProgress(0);
-                                        seekBar.setMax(mp.getDuration());
-                                        b.setText("Stop");
-                                    }
-                                });
-                            }
-                        }catch (IOException e) {
-
-                        }
-                        */
 
                     }
                 };
@@ -104,33 +78,11 @@ public class MainActivity extends AppCompatActivity {
 
         CheckPermission();
 
-        Thread t = new MyThread();
-        t.start();
+
 
     }
 
-    public class MyThread extends Thread {
-        @Override
-        public void run() {
-            while(true) {
-                try{
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (mediaPlayer != null) {
-                    seekBar.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            seekBar.setProgress(mediaPlayer.getCurrentPosition());
-                        }
-                    });
-                }
-            }
 
-
-        }
-    }
 
     private void CheckPermission() {
         if (Build.VERSION.SDK_INT >= 23) {
