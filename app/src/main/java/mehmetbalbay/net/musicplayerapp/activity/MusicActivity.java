@@ -18,6 +18,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.Typeface;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
@@ -33,6 +35,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -47,33 +50,42 @@ import mehmetbalbay.net.musicplayerapp.model.SongInfo;
 public class MusicActivity extends AppCompatActivity {
 
     private ImageView back_btn_Image,image_back_blur, main_Image;
-    private TextView player_title,player_album_name,player_artist_name;
+    private TextView player_title,player_song_name,player_album_name,player_artist_name,player_current_time,player_full_time;
+    private ImageView play_button, previous_button, skip_next_button, replay_button, shuffle_button;
     private MediaPlayer mediaPlayer;
     private SeekBar seekBar;
-    private int mCornerRadius;
-    private int mMargin;
-
-    private static final int CORNER_RADIUS = 100;
-    private static final int MARGIN = 0;
+    private AnimatedVectorDrawable tickToCross,crossToTick,drawable;
+    private boolean tick = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
 
-        final float density = getApplicationContext().getResources().getDisplayMetrics().density;
-        mCornerRadius = (int) (CORNER_RADIUS * density + 0.5f);
-        mMargin = (int) (MARGIN * density + 0.5f);
-
+        // Resmi bitmape çevirdik.
         Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.full);
 
-        //StreamDrawable d = new StreamDrawable(mBitmap , mCornerRadius, mMargin);
-
+        // Tanımlamalar.
         player_title = findViewById(R.id.player_title);
+        player_song_name = findViewById(R.id.player_song_name);
         player_album_name = findViewById(R.id.player_album_name);
         player_artist_name = findViewById(R.id.player_artist_name);
+        player_current_time = findViewById(R.id.player_current_time);
+        player_full_time = findViewById(R.id.player_full_time);
         seekBar = findViewById(R.id.player_seekbar);
         main_Image = findViewById(R.id.main_image);
+
+        // Buttons
+        play_button = findViewById(R.id.play_button);
+        previous_button = findViewById(R.id.previous_button);
+        skip_next_button = findViewById(R.id.skip_next_button);
+        replay_button = findViewById(R.id.replay_button);
+        shuffle_button = findViewById(R.id.shuffle_button);
+
+        // Tickcross
+        tickToCross = (AnimatedVectorDrawable) getDrawable(R.drawable.avd_tick_to_cross);
+        crossToTick = (AnimatedVectorDrawable) getDrawable(R.drawable.avd_cross_to_tick);
+
 
         main_Image.setImageBitmap(getCircleBitmap(mBitmap));
 
@@ -91,9 +103,10 @@ public class MusicActivity extends AppCompatActivity {
         Intent intent = getIntent();
         SongInfo songInfo = (SongInfo) intent.getSerializableExtra("serialize_data");
 
-        String song_name = songInfo.getSongName();
-        String artist_name = songInfo.getArtistName();
+        final String song_name = songInfo.getSongName();
+        final String artist_name = songInfo.getArtistName();
         String song_url = songInfo.getSongUrl();
+        final String album_name = songInfo.getAlbumName();
         if (song_name != null){
             Log.d("Serialize_data",song_url);
             try {
@@ -103,9 +116,15 @@ public class MusicActivity extends AppCompatActivity {
                 mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
-                        //mp.start();
                         seekBar.setProgress(0);
                         seekBar.setMax(mp.getDuration());
+                        player_full_time.setText(String.valueOf(getTimeString(mp.getDuration())));
+
+                        player_song_name.setText(song_name);
+                        player_artist_name.setText(artist_name);
+                        player_album_name.setText(album_name);
+
+                        click_play_button();
                         }
                         });
             }catch (IOException e) { }
@@ -116,8 +135,6 @@ public class MusicActivity extends AppCompatActivity {
 
         Thread t = new MyThread();
         t.start();
-
-
     }
 
     public class MyThread extends Thread {
@@ -134,17 +151,17 @@ public class MusicActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             seekBar.setProgress(mediaPlayer.getCurrentPosition());
+                            player_current_time.setText(String.valueOf(getTimeString(mediaPlayer.getCurrentPosition())));
+
                         }
                     });
                 }
             }
-
-
         }
     }
 
     public void backButtonFucktion(View v) {
-        back_btn_Image = findViewById(R.id.back_btn_Image);
+        back_btn_Image = findViewById(R.id.back_button);
         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha);
         back_btn_Image.startAnimation(animation);
     }
@@ -174,69 +191,40 @@ public class MusicActivity extends AppCompatActivity {
         return bitmap;
     }
 
-    /*
+    public void click_play_button() {
+        play_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-    class StreamDrawable extends Drawable {
-        private static final boolean USE_VIGNETTE = true;
 
-        private final float mCornerRadius;
-        private final RectF mRect = new RectF();
-        private final BitmapShader mBitmapShader;
-        private final Paint mPaint;
-        private final int mMargin;
+                drawable = tick ? tickToCross : crossToTick;
+                play_button.setImageDrawable(drawable);
+                drawable.start();
+                tick = !tick;
 
-        StreamDrawable(Bitmap bitmap, float cornerRadius, int margin) {
-            mCornerRadius = cornerRadius;
+                if (mediaPlayer.isPlaying()){
+                    mediaPlayer.pause();
+                }else if (!mediaPlayer.isPlaying()){
+                    mediaPlayer.start();
+                }
 
-            mBitmapShader = new BitmapShader(bitmap,
-                    Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-
-            mPaint = new Paint();
-            mPaint.setAntiAlias(true);
-            mPaint.setShader(mBitmapShader);
-
-            mMargin = margin;
-        }
-
-        @Override
-        protected void onBoundsChange(Rect bounds) {
-            super.onBoundsChange(bounds);
-            mRect.set(mMargin, mMargin, bounds.width() - mMargin, bounds.height() - mMargin);
-
-            if (USE_VIGNETTE) {
-                RadialGradient vignette = new RadialGradient(
-                        mRect.centerX(), mRect.centerY() * 1.0f / 0.7f, mRect.centerX() * 1.3f,
-                        new int[] { 0, 0, 0x7f000000 }, new float[] { 0.0f, 0.7f, 1.0f },
-                        Shader.TileMode.CLAMP);
-                Matrix oval = new Matrix();
-                oval.setScale(1.0f, 0.7f);
-                vignette.setLocalMatrix(oval);
-
-                mPaint.setShader(
-                        new ComposeShader(mBitmapShader, vignette, PorterDuff.Mode.SRC_OVER));
             }
-        }
-
-        @Override
-        public void draw(@NonNull Canvas canvas) {
-            canvas.drawRoundRect(mRect, mCornerRadius, mCornerRadius, mPaint);
-        }
-
-        @Override
-        public void setAlpha(int alpha) {
-            mPaint.setAlpha(alpha);
-        }
-
-        @Override
-        public void setColorFilter(@Nullable ColorFilter cf) {
-            mPaint.setColorFilter(cf);
-        }
-
-        @Override
-        public int getOpacity() {
-            return PixelFormat.TRANSLUCENT;
-        }
+        });
     }
 
-    */
+    private String getTimeString(long millis) {
+        StringBuffer buf = new StringBuffer();
+
+        int hours = (int) (millis/ (1000 * 60 * 60));
+        int minutes = (int) ((millis % (1000 * 60 * 60)) / (1000 * 60));
+        int seconds = (int) (((millis % (1000 * 60 * 60)) %(1000 * 60)) / 1000);
+
+        buf
+                .append(String.format("%02d", minutes))
+                .append(":")
+                .append(String.format("%02d", seconds));
+
+        return buf.toString();
+
+    }
 }

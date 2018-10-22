@@ -11,13 +11,14 @@
     <ImageView
         android:id="@+id/image_back_blur"
         android:layout_width="0dp"
-        android:layout_height="289dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="50dp"
         android:alpha="0.4"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/main_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/full" />
 
 
@@ -33,21 +34,34 @@
         app:srcCompat="@color/color_gray" />
 
     <ImageView
-        android:id="@+id/back_btn_Image"
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.4"
+        android:background="@color/color_player_gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/image_back_blur"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/back_button"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:onClick="backButtonFucktion"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/more_button"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -55,20 +69,24 @@
 
     <SeekBar
         android:id="@+id/player_seekbar"
+        style="@style/tallerBarStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
         android:layout_marginTop="32dp"
-        android:paddingStart="1dp"
-        android:paddingEnd="1dp"
+        android:layout_marginEnd="9dp"
+        android:paddingStart="9dp"
+        android:paddingEnd="9dp"
+        android:progressDrawable="@drawable/custom_seekbar"
+        android:thumb="@drawable/custom_thumb"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/player_artist_name" />
 
     <ImageView
         android:id="@+id/main_image"
-        android:layout_width="225dp"
-        android:layout_height="225dp"
+        android:layout_width="210dp"
+        android:layout_height="210dp"
         android:layout_marginTop="75dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,13 +100,13 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:text="Now Playing"
-        android:textColor="#000000"
+        android:textColor="#162031"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@+id/back_btn_Image"
-        app:layout_constraintEnd_toStartOf="@+id/imageView2"
-        app:layout_constraintStart_toEndOf="@+id/back_btn_Image"
-        app:layout_constraintTop_toTopOf="@+id/back_btn_Image" />
+        app:layout_constraintBottom_toBottomOf="@+id/back_button"
+        app:layout_constraintEnd_toStartOf="@+id/more_button"
+        app:layout_constraintStart_toEndOf="@+id/back_button"
+        app:layout_constraintTop_toTopOf="@+id/back_button" />
 
     <TextView
         android:id="@+id/player_album_name"
@@ -98,7 +116,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="8dp"
         android:text="Nothing Was the Same"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.475"
@@ -111,70 +129,71 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="DRAKE"
+        android:textSize="13sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/player_album_name"
         app:layout_constraintStart_toStartOf="@+id/player_album_name"
         app:layout_constraintTop_toBottomOf="@+id/player_album_name" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/play_button"
         android:layout_width="56dp"
         android:layout_height="56dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/circle"
+        android:src="@drawable/ic_play_arrow_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageView5"
-        app:layout_constraintStart_toEndOf="@+id/imageView4"
-        app:layout_constraintTop_toBottomOf="@+id/player_seekbar"
-        app:srcCompat="@drawable/ic_play_arrow_black_24dp" />
+        app:layout_constraintEnd_toStartOf="@+id/skip_next_button"
+        app:layout_constraintStart_toEndOf="@+id/previous_button"
+        app:layout_constraintTop_toBottomOf="@+id/player_seekbar" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/previous_button"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintEnd_toStartOf="@+id/imageView"
-        app:layout_constraintStart_toEndOf="@+id/imageView7"
-        app:layout_constraintTop_toTopOf="@+id/imageView"
+        app:layout_constraintBottom_toBottomOf="@+id/play_button"
+        app:layout_constraintEnd_toStartOf="@+id/play_button"
+        app:layout_constraintStart_toEndOf="@+id/shuffle_button"
+        app:layout_constraintTop_toTopOf="@+id/play_button"
         app:srcCompat="@drawable/ic_skip_previous_black_24dp" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/skip_next_button"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintEnd_toStartOf="@+id/imageView6"
-        app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="@+id/imageView"
+        app:layout_constraintBottom_toBottomOf="@+id/play_button"
+        app:layout_constraintEnd_toStartOf="@+id/replay_button"
+        app:layout_constraintStart_toEndOf="@+id/play_button"
+        app:layout_constraintTop_toTopOf="@+id/play_button"
         app:srcCompat="@drawable/ic_skip_next_black_24dp" />
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/replay_button"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+        app:layout_constraintBottom_toBottomOf="@+id/skip_next_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView5"
-        app:layout_constraintTop_toTopOf="@+id/imageView5"
+        app:layout_constraintStart_toEndOf="@+id/skip_next_button"
+        app:layout_constraintTop_toTopOf="@+id/skip_next_button"
         app:srcCompat="@drawable/ic_replay_black_24dp" />
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/shuffle_button"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-        app:layout_constraintEnd_toStartOf="@+id/imageView4"
+        app:layout_constraintBottom_toBottomOf="@+id/previous_button"
+        app:layout_constraintEnd_toStartOf="@+id/previous_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView4"
+        app:layout_constraintTop_toTopOf="@+id/previous_button"
         app:srcCompat="@drawable/ic_shuffle_black_24dp" />
 
     <TextView
@@ -186,7 +205,7 @@
         android:textColor="@color/color_gray_500"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/imageView7"
+        app:layout_constraintBottom_toTopOf="@+id/shuffle_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/player_seekbar"
         app:layout_constraintVertical_bias="0.20" />
@@ -200,8 +219,29 @@
         android:textColor="@color/color_gray_500"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/imageView6"
+        app:layout_constraintBottom_toTopOf="@+id/replay_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/player_seekbar"
         app:layout_constraintVertical_bias="0.20" />
+
+    <TextView
+        android:id="@+id/player_song_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:scrollHorizontally="false"
+        android:text="Tuscan Leather"
+        android:textColor="@color/color_song_name"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/main_image"
+        app:layout_constraintEnd_toEndOf="@+id/player_title"
+        app:layout_constraintStart_toStartOf="@+id/player_title"
+        app:layout_constraintTop_toBottomOf="@+id/player_title" />
+
 </android.support.constraint.ConstraintLayout>

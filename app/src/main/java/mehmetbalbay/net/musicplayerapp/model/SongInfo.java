@@ -7,14 +7,16 @@ public class SongInfo implements Serializable {
     private String songName;
     private String artistName;
     private String songUrl;
+    private String albumName;
 
     public SongInfo() {
     }
 
-    public SongInfo(String songName, String artistName, String songUrl) {
+    public SongInfo(String songName, String artistName, String songUrl, String albumName) {
         this.songName = songName;
         this.artistName = artistName;
         this.songUrl = songUrl;
+        this.albumName = albumName;
     }
 
     public String getSongName() {
@@ -41,4 +43,11 @@ public class SongInfo implements Serializable {
         this.songUrl = songUrl;
     }
 
+    public String getAlbumName() {
+        return albumName;
+    }
+
+    public void setAlbumName(String albumName) {
+        this.albumName = albumName;
+    }
 }

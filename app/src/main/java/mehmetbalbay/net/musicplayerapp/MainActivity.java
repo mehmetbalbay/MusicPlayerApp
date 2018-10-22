@@ -20,9 +20,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.Toast;
-import java.io.IOException;
 import java.util.ArrayList;
-
 import mehmetbalbay.net.musicplayerapp.activity.MusicActivity;
 import mehmetbalbay.net.musicplayerapp.adapter.SongAdapter;
 import mehmetbalbay.net.musicplayerapp.model.SongInfo;
@@ -31,9 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ArrayList<SongInfo> songs = new ArrayList<SongInfo>();
     private RecyclerView recyclerView;
-    private SeekBar seekBar;
     private SongAdapter songAdapter;
-    private MediaPlayer mediaPlayer;
     private Handler handler = new Handler();
 
     @Override
@@ -42,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         recyclerView = findViewById(R.id.recyclerView);
-        seekBar = findViewById(R.id.seekBar);
 
         songAdapter = new SongAdapter(this, songs);
         LinearLayoutManager lm = new LinearLayoutManager(this);
@@ -58,31 +53,16 @@ public class MainActivity extends AppCompatActivity {
                 Runnable r = new Runnable() {
                     @Override
                     public void run() {
-
                         Intent intent = new Intent(MainActivity.this, MusicActivity.class);
-
-
                         intent.putExtra("serialize_data",obj);
-
                         startActivity(intent);
-
-
                     }
                 };
-
                 handler.postDelayed(r, 100);
-
-
             }
         });
-
         CheckPermission();
-
-
-
     }
-
-
 
     private void CheckPermission() {
         if (Build.VERSION.SDK_INT >= 23) {
@@ -125,8 +105,9 @@ public class MainActivity extends AppCompatActivity {
                     String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
                     String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
                     String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+                    String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
 
-                    SongInfo s = new SongInfo(name,artist,url);
+                    SongInfo s = new SongInfo(name,artist,url,album);
                     songs.add(s);
                 }while(cursor.moveToNext());
             }
