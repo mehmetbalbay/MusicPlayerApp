@@ -3,29 +3,13 @@ package mehmetbalbay.net.musicplayerapp.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.ComposeShader;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.RadialGradient;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.graphics.Shader;
 import android.graphics.Typeface;
-import android.graphics.drawable.Animatable;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -35,15 +19,14 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jackandphantom.blurimage.BlurImage;
-
 import java.io.IOException;
-
+import java.util.ArrayList;
 import mehmetbalbay.net.musicplayerapp.R;
 import mehmetbalbay.net.musicplayerapp.model.SongInfo;
 
@@ -56,6 +39,8 @@ public class MusicActivity extends AppCompatActivity {
     private SeekBar seekBar;
     private AnimatedVectorDrawable tickToCross,crossToTick,drawable;
     private boolean tick = true;
+    private ArrayList<SongInfo> songs;
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,12 +86,22 @@ public class MusicActivity extends AppCompatActivity {
         BlurImage.with(getApplicationContext()).load(R.drawable.full).intensity(20).Async(true).into(image_back_blur);
 
         Intent intent = getIntent();
-        SongInfo songInfo = (SongInfo) intent.getSerializableExtra("serialize_data");
+        songs = (ArrayList<SongInfo>) intent.getSerializableExtra("songList");
+        position = intent.getIntExtra("position", 0);
 
-        final String song_name = songInfo.getSongName();
-        final String artist_name = songInfo.getArtistName();
-        String song_url = songInfo.getSongUrl();
-        final String album_name = songInfo.getAlbumName();
+        sarkiCal(position);
+
+        click_skip_next_button();
+
+    }
+
+    public void sarkiCal(int position) {
+
+        final String song_name = songs.get(position).getSongName();
+        final String artist_name = songs.get(position).getArtistName();
+        String song_url = songs.get(position).getSongUrl();
+        final String album_name = songs.get(position).getAlbumName();
+
         if (song_name != null){
             Log.d("Serialize_data",song_url);
             try {
@@ -125,9 +120,28 @@ public class MusicActivity extends AppCompatActivity {
                         player_album_name.setText(album_name);
 
                         click_play_button();
-                        }
+
+                        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+                                mediaPlayer.seekTo(seekBar.getProgress());
+                            }
                         });
-            }catch (IOException e) { }
+                    }
+                });
+            }catch (IOException e) {
+                Toast.makeText(this, "Bir Hata Oluştu.", Toast.LENGTH_SHORT).show();
+            }
 
         } else {
             Log.d("Serialize_data", "Hata");
@@ -135,6 +149,7 @@ public class MusicActivity extends AppCompatActivity {
 
         Thread t = new MyThread();
         t.start();
+
     }
 
     public class MyThread extends Thread {
@@ -142,7 +157,7 @@ public class MusicActivity extends AppCompatActivity {
         public void run() {
             while(true) {
                 try{
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -207,6 +222,23 @@ public class MusicActivity extends AppCompatActivity {
                 }else if (!mediaPlayer.isPlaying()){
                     mediaPlayer.start();
                 }
+
+            }
+        });
+    }
+
+    public void click_skip_next_button() {
+        skip_next_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mediaPlayer.isPlaying()){
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                    position = position +1;
+                    sarkiCal(position);
+                }
+
 
             }
         });

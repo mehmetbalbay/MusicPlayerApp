@@ -48,13 +48,14 @@ public class MainActivity extends AppCompatActivity {
 
         songAdapter.setOnItemClickListener(new SongAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(final Button b, View v, final SongInfo obj, int position) {
+            public void onItemClick(final Button b, View v, final SongInfo obj, final int position) {
 
                 Runnable r = new Runnable() {
                     @Override
                     public void run() {
                         Intent intent = new Intent(MainActivity.this, MusicActivity.class);
-                        intent.putExtra("serialize_data",obj);
+                        intent.putExtra("position",position);
+                        intent.putExtra("songList",songs);
                         startActivity(intent);
                     }
                 };
@@ -106,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
                     String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
                     String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
                     String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+
 
                     SongInfo s = new SongInfo(name,artist,url,album);
                     songs.add(s);
