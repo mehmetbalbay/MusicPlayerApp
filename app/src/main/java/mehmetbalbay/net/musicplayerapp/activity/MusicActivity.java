@@ -93,6 +93,15 @@ public class MusicActivity extends AppCompatActivity {
 
         click_skip_next_button();
 
+        click_previous_button();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mediaPlayer.stop();
+        mediaPlayer.release();
     }
 
     public void sarkiCal(int position) {
@@ -140,7 +149,9 @@ public class MusicActivity extends AppCompatActivity {
                     }
                 });
             }catch (IOException e) {
-                Toast.makeText(this, "Bir Hata Oluştu.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Bir Hata Oluştu. Şarkı Çalınamadı.", Toast.LENGTH_SHORT).show();
+                position = (position+1)%songs.size();
+                sarkiCal(position);
             }
 
         } else {
@@ -206,16 +217,19 @@ public class MusicActivity extends AppCompatActivity {
         return bitmap;
     }
 
+    public void play_pause_kontrol() {
+        drawable = tick ? tickToCross : crossToTick;
+        play_button.setImageDrawable(drawable);
+        drawable.start();
+        tick = !tick;
+    }
+
     public void click_play_button() {
         play_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
-                drawable = tick ? tickToCross : crossToTick;
-                play_button.setImageDrawable(drawable);
-                drawable.start();
-                tick = !tick;
+                play_pause_kontrol();
 
                 if (mediaPlayer.isPlaying()){
                     mediaPlayer.pause();
@@ -233,15 +247,37 @@ public class MusicActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (mediaPlayer.isPlaying()){
+                    play_pause_kontrol();
                     mediaPlayer.stop();
                     mediaPlayer.release();
-                    position = position +1;
+                    position = (position+1)%songs.size();
                     sarkiCal(position);
                 }
+
+                mediaPlayer.start();
 
 
             }
         });
+    }
+
+    public void click_previous_button() {
+
+        previous_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mediaPlayer.isPlaying()) {
+                    play_pause_kontrol();
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                    position = (position-1)%songs.size();
+                    sarkiCal(position);
+                }
+
+            }
+        });
+
     }
 
     private String getTimeString(long millis) {
