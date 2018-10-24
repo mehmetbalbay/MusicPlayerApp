@@ -1,5 +1,7 @@
 package mehmetbalbay.net.musicplayerapp.activity;
 
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,6 +11,7 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -25,7 +28,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jackandphantom.blurimage.BlurImage;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import mehmetbalbay.net.musicplayerapp.R;
 import mehmetbalbay.net.musicplayerapp.model.SongInfo;
@@ -41,6 +47,7 @@ public class MusicActivity extends AppCompatActivity {
     private boolean tick = true;
     private ArrayList<SongInfo> songs;
     private int position;
+    private Bitmap artwork;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,9 +79,6 @@ public class MusicActivity extends AppCompatActivity {
         crossToTick = (AnimatedVectorDrawable) getDrawable(R.drawable.avd_cross_to_tick);
 
 
-        main_Image.setImageBitmap(getCircleBitmap(mBitmap));
-
-
         if (Build.VERSION.SDK_INT >= 19) {
             Typeface typeface = ResourcesCompat.getFont(this,R.font.opensansbold);
             player_title.setTypeface(typeface);
@@ -82,12 +86,16 @@ public class MusicActivity extends AppCompatActivity {
             player_album_name.setTypeface(typeface);
         }
 
-        image_back_blur = findViewById(R.id.image_back_blur);
-        BlurImage.with(getApplicationContext()).load(R.drawable.full).intensity(20).Async(true).into(image_back_blur);
 
         Intent intent = getIntent();
         songs = (ArrayList<SongInfo>) intent.getSerializableExtra("songList");
         position = intent.getIntExtra("position", 0);
+
+        long album_id = Long.parseLong(songs.get(position).getAlbum_id());
+
+        image_back_blur = findViewById(R.id.image_back_blur);
+        BlurImage.with(getApplicationContext()).load(getAlbumArt(album_id)).intensity(20).Async(true).into(image_back_blur);
+        main_Image.setImageBitmap(getCircleBitmap(getAlbumArt(album_id)));
 
         sarkiCal(position);
 
@@ -195,7 +203,7 @@ public class MusicActivity extends AppCompatActivity {
     public Bitmap getCircleBitmap(Bitmap source) {
         RoundedBitmapDrawable roundedBitmapDrawable = RoundedBitmapDrawableFactory.create(getResources(), source);
         roundedBitmapDrawable.setCircular(false);
-        roundedBitmapDrawable.setCornerRadius(150);
+        roundedBitmapDrawable.setCornerRadius(50);
         return drawableToBitmap(roundedBitmapDrawable);
     }
 
@@ -294,5 +302,26 @@ public class MusicActivity extends AppCompatActivity {
 
         return buf.toString();
 
+    }
+
+    private Bitmap getAlbumArt(long album_id) {
+
+        Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+        Uri uri = ContentUris.withAppendedId(sArtworkUri, album_id);
+        ContentResolver res = getContentResolver();
+        InputStream in = null;
+        try {
+            in = res.openInputStream(uri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if (artwork == null) {
+            artwork = BitmapFactory.decodeResource(getResources(), R.drawable.coverart);
+        }else {
+            artwork = BitmapFactory.decodeStream(in);
+        }
+
+        return artwork;
     }
 }

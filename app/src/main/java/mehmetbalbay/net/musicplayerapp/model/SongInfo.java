@@ -8,15 +8,17 @@ public class SongInfo implements Serializable {
     private String artistName;
     private String songUrl;
     private String albumName;
+    private String album_id;
 
     public SongInfo() {
     }
 
-    public SongInfo(String songName, String artistName, String songUrl, String albumName) {
+    public SongInfo(String songName, String artistName, String songUrl, String albumName, String album_id) {
         this.songName = songName;
         this.artistName = artistName;
         this.songUrl = songUrl;
         this.albumName = albumName;
+        this.album_id = album_id;
     }
 
     public String getSongName() {
@@ -49,5 +51,13 @@ public class SongInfo implements Serializable {
 
     public void setAlbumName(String albumName) {
         this.albumName = albumName;
+    }
+
+    public String getAlbum_id() {
+        return album_id;
+    }
+
+    public void setAlbum_id(String album_id) {
+        this.album_id = album_id;
     }
 }

@@ -105,9 +105,9 @@ public class MainActivity extends AppCompatActivity {
                     String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
                     String url = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
                     String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
+                    String album_id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
 
-
-                    SongInfo s = new SongInfo(name,artist,url,album);
+                    SongInfo s = new SongInfo(name,artist,url,album, album_id);
                     songs.add(s);
                 }while(cursor.moveToNext());
             }
